@@ -31,126 +31,63 @@ public class Calculator extends JFrame
    private JButton buttonDiv;
    private JButton buttonSqur;
    private JButton buttonPar;
+   private JButton buttonPar2;
    private JButton buttonEqu;
    private JButton buttonback;
    private JButton buttonc;
    private JButton buttonPM;
    private JButton buttonDot;
    private JTextField txtDis;
-   
+   //Declare the 3 JPanels motherPanel will contain the other two
    private JPanel motherPanel;
    private JPanel textPanel;
    private JPanel buttons;
-
-   String equationString;
+   
+   //Set the string that will contain the equation to be empty
+   String equationString = "";
    
    //Calculator constructor
    public Calculator()
    {
+      //creates buttons and then sets their fonts
       createButtons();
       editFont();
-           
+      //makes an action listener for all of the buttons that update the string
+      //and print to the textbox
+      creatActionListeners();
+      //adds all of the buttons to their JPanel and then adds all of the panels 
+      //into eachother and sets the mother panel as the main gui
+      addItems();
+      
+      //sets the general information for the gui title, size, exit, and visibility
       setTitle("Calculator");
       setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
       setLocationByPlatform(true);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      setVisible(true);
-      
-      addItems();
-      
-      button1.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e){
-               equationString = (equationString+"1");
-         }
-      });
-      
-            button2.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e){
-               equationString = (equationString+"2");
-         }
-      });
-      
-      /*
-      button2
-      button3
-      button4
-      button5
-      button6
-      button7
-      button8
-      button9
-      button0
-      buttonP
-      buttonM
-      buttonMult
-      buttonDiv
-      buttonSqur
-      buttonPar
-      buttonEqu
-      buttonback
-      buttonc
-      buttonPM
-      buttonDot
-      */       
-   
+      setVisible(true);     
    }
    
-   
-   
-   
-/*   
-   //action listener for newfact button. This will change the facts
-   private class FactSwitch implements ActionListener 
-    {
-
-        public void actionPerformed(ActionEvent e) 
-        {
-            //make the new icons facts for the 8 cat buttons
-            Icon fact1r = new ImageIcon(getClass().getResource("fact1r.jpg"));
-            Icon fact2r = new ImageIcon(getClass().getResource("fact2r.jpg"));
-            Icon fact3r = new ImageIcon(getClass().getResource("fact3r.jpg"));
-            Icon fact4r = new ImageIcon(getClass().getResource("fact4r.jpg"));
-            Icon fact5r = new ImageIcon(getClass().getResource("fact5r.jpg"));
-            Icon fact6r = new ImageIcon(getClass().getResource("fact6r.jpg"));
-            Icon fact7r = new ImageIcon(getClass().getResource("fact7r.jpg"));
-            Icon fact8r = new ImageIcon(getClass().getResource("fact8r.jpg"));
-            
-            //set the new image icons for the 8 cat facts and chage the 
-            //text on the newFact button
-            catOne.setRolloverIcon(fact1r);
-            catTwo.setRolloverIcon(fact2r);
-            catThree.setRolloverIcon(fact3r);
-            catFour.setRolloverIcon(fact4r);
-            catFive.setRolloverIcon(fact5r);
-            catSix.setRolloverIcon(fact6r);
-            catSeven.setRolloverIcon(fact7r);
-            catEight.setRolloverIcon(fact8r);
-            newFact.setText("Thats all the facts we have");
-
-            
-            
-        }
-    }
-*/
-
-   public static void main(String args[]) throws Exception
+  /*
+      This is the main method. This method will call the Calculator class to
+      create an object of type calculator 
+  */
+   public static void main(String args[])
    {
       Calculator play = new Calculator();
-      String res = (" ");
-      Calc(res);
    }
    
    
-   public static void Calc(String res) throws Exception
+   public String Calc(String res)
    {
       javax.script.ScriptEngineManager mgr = new javax.script.ScriptEngineManager();
       javax.script.ScriptEngine engine = mgr.getEngineByName("JavaScript");
-      res = "((2+3/1)*(4/-)";
-      
+      String outPut;
       try{
-         System.out.println(engine.eval(res));
+         outPut = String.valueOf(engine.eval(res));
+         return outPut;
       }catch(ScriptException e){
-         System.out.println("There was an error in your formula.");
+         outPut = "Error in formula";
+         return outPut;
       }
    }
    
@@ -179,7 +116,8 @@ public class Calculator extends JFrame
       buttonMult = new JButton("*");
       buttonDiv = new JButton("/");
       buttonSqur = new JButton("^");
-      buttonPar = new JButton("()");
+      buttonPar = new JButton("(");
+      buttonPar2 = new JButton(")");
       buttonEqu = new JButton("=");
       buttonback = new JButton("<----");
       buttonc = new JButton("C");
@@ -211,6 +149,7 @@ public class Calculator extends JFrame
       buttonDiv.setFont(new Font("Calibri", Font.BOLD, 20));
       buttonSqur.setFont(new Font("Calibri", Font.BOLD, 20));
       buttonPar.setFont(new Font("Calibri", Font.BOLD, 20));
+      buttonPar2.setFont(new Font("Calibri", Font.BOLD, 20));
       buttonEqu.setFont(new Font("Calibri", Font.BOLD, 20));
       buttonback.setFont(new Font("Calibri", Font.BOLD, 20));
       buttonc.setFont(new Font("Calibri", Font.BOLD, 20));
@@ -224,7 +163,8 @@ public class Calculator extends JFrame
       //add all the buttons to the grid layout        
       buttons.add(buttonSqur);
       buttons.add(buttonc);
-      buttons.add(buttonback);
+      //buttons.add(buttonback);
+      buttons.add(buttonDot);
       buttons.add(buttonDiv);
       buttons.add(button7);
       buttons.add(button8);
@@ -240,7 +180,7 @@ public class Calculator extends JFrame
       buttons.add(buttonP);      
       buttons.add(buttonPar);
       buttons.add(button0);
-      buttons.add(buttonDot);
+      buttons.add(buttonPar2);
       buttons.add(buttonEqu);
       
       
@@ -249,4 +189,177 @@ public class Calculator extends JFrame
       add(motherPanel);
    }
    
+   public void creatActionListeners(){
+         //create all of the action listeners for all of the buttons
+         button1.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"1");
+               txtDis.setText(equationString);
+               System.out.println(equationString);
+            }
+         });
+      
+         button2.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"2");
+               txtDis.setText(equationString);
+            }
+         });
+         
+         button3.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"3");
+               txtDis.setText(equationString);
+            }
+         });
+      
+         button4.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"4");
+               txtDis.setText(equationString);
+            }
+         });
+
+         button5.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"5");
+               txtDis.setText(equationString);
+            }
+         });
+      
+         button6.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"6");
+               txtDis.setText(equationString);
+            }
+         });
+         
+         button7.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"7");
+               txtDis.setText(equationString);
+            }
+         });
+      
+         button8.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"8");
+               txtDis.setText(equationString);
+            }
+         });      
+         
+         button9.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"9");
+               txtDis.setText(equationString);
+            }
+         });
+      
+         button0.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"0");
+               txtDis.setText(equationString);
+            }
+         });
+         
+         buttonP.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"+");
+               txtDis.setText(equationString);
+            }
+         });
+      
+         buttonM.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"-");
+               txtDis.setText(equationString);
+            }
+         });         
+
+         buttonMult.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"*");
+               txtDis.setText(equationString);
+            }
+         });
+      
+         buttonDiv.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"/");
+               txtDis.setText(equationString);
+            }
+         });
+         
+         buttonSqur.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               //txtDis.setTxt(equationString+"^");
+               if(equationString.length() == 0){
+                  txtDis.setText("Come on stupid enter a value");
+               }else{
+               String last = (equationString.substring(equationString.length() - 1));
+               equationString = equationString.substring(0, equationString.length() - 1);
+               equationString = (equationString+"Math.pow("+last+",");
+               txtDis.setText(equationString);
+               }
+            }
+         });
+         
+         //PARENTHASES
+         buttonPar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"(");
+               txtDis.setText(equationString);
+            }
+         });
+         
+         buttonPar2.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+")");
+               txtDis.setText(equationString);
+            }
+         });
+         
+         //EQUAL 
+         buttonEqu.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){      
+               equationString = Calc(equationString);
+               txtDis.setText(equationString);
+               if(equationString.equals("Error in formula"))
+               {
+                  equationString = "";
+               }
+            }
+         });
+      
+  
+         /*//BACK BUTTON
+         buttonback.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"");
+            }
+         });*/
+         
+         //CLEAR
+         buttonc.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = ("");
+               txtDis.setText(equationString);
+            }
+         });
+      
+         buttonPM.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+"-");
+               txtDis.setText(equationString);
+            }
+         });
+         
+         buttonDot.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+               equationString = (equationString+".");
+               txtDis.setText(equationString);
+            }
+         });
+   
+   }   
 }
